@@ -1,0 +1,45 @@
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Consolas', monospace;
+    margin: 5%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-left: 5%;
+}
+
+.info {
+    margin-left: 10%;
+}
+
+a {
+    color: #ffffca;
+}
+
+img {
+    background-color: #ffffff;
+    border-radius: 25px;
+    padding: 20px;
+}
+
+.listen {
+    background-color: #000;
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Gnome-mime-sound-openclipart.svg/50px-Gnome-mime-sound-openclipart.svg.png);
+    background-position: center;
+    background-size: inherit;
+    min-width: 50px;
+    min-height: 50px;
+}
+
+table, tr, td {
+    margin: 5% 15% 5% 15%;
+    border: #fff solid;
+    width: 25%;
+}
+
+.play-around{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}

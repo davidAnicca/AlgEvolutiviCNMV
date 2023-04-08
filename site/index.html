@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="./h/styles/github-dark.min.css" type="text/css">
+    <script src="./h/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+    <script src="scripts.js"></script>
+    <title>Algoritmi evolutivi</title>
+</head>
+<body>
+
+
+<h1>Algoritmi evolutivi ~ o introducere</h1>
+<h3>Folosirea unui algoritm evolutiv pentru a genera un acord muzical</h3>
+
+<div class="info">
+    <p>
+        Curuțiu-Mereșan David (2023) ~ material realizat pentru Colegiul Național "Mihai Viteazu" Turda în programul
+        <em>Școala Altfel</em>.
+    </p>
+    <p>
+        <em>Prof. îndrumător: Ligia Mînican</em>
+    </p>
+</div>
+
+<hr>
+<div class="cuprins">
+    <h2>Cuprins</h2>
+    <div class="info">
+        <ol>
+            <li><a href="#muzica">
+                Teorie muzicală distilată
+            </a></li>
+            <li><a href="#selectia">
+                Selecția naturală
+            </a></li>
+            <li><a href="#">
+                Algoritmi genetici
+            </a></li>
+            <li><a href="#">
+                Algoritm genetic pentru generarea unui acord muzical
+            </a></li>
+            <li><a href="#">
+                Introducere în Python
+            </a></li>
+            <li><a href="#">
+                Codul sursă
+            </a></li>
+        </ol>
+    </div>
+
+</div>
+
+<hr>
+<div id="muzica">
+    <h3>Teorie muzicală distilată</h3>
+    <div class="info">
+        <p>
+            <em><strong>Profesorul</strong> (foarte nemulțumit și repetând definiția)</em>: Muzica iaște aceea care ne
+            gâghilă urechile într-un mod plăcut...
+            <em>(pântre dinți, aparte, școlarului:)</em> Ia sama doară să nu ți le gâghil eu ție într-un mod neplăcut!
+            <em>(Se aude clopotul de ieșire.)</em>
+        </p>
+        <p>
+            <em><strong>Inspectorul</strong> (se ridică; copiii fac și ei ca inspectorul)</em>:
+            Domnule profesore, sunt foarte mulțumit. Metoda dumitale e admirabilă...
+        </p>
+        <p style="text-align: right"><em>~ <strong>Un pedagog de școală nouă</strong> (de Ion Luca Caragiale)</em></p>
+    </div>
+
+    <div class="info">
+        <p>Atunci când aruncăm o piatră în apă, din punctul de contact se propagă o serie de valuri. În același fel
+            funcționează și sunetul.
+        </p>
+        <p>
+            Existența unui sunet apare atunci când există o sursă (o vibrație puternică într-un punct din spațiu) și
+            un mediu de propagare (în cazul nostru, aerul).
+        </p>
+        <p>
+            Cel mai simplu sunet pe care îl putem modela matematic este un <em>sine wave</em> (sinusoidă). El este doar
+            o funcție matematică exprimată
+            folosind trigonometria.
+        </p>
+
+        <p>
+            Așa cum ne așteptăm, o astfel de funcție arată întocmai ca niște <em>valuri.</em>
+        </p>
+
+        <img width="30%"
+             src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/ComplexSinInATimeAxe.gif/400px-ComplexSinInATimeAxe.gif"
+             alt="sine wave">
+    </div>
+
+    <h4>Matematica</h4>
+    <div class="info">
+        <p>O sinusoidă este o funcție matematică definită astfel:</p>
+        <p>
+            $$y(t) = A \sin(\omega t + \varphi)$$
+        </p>
+        <ul>
+            <li>
+                t - timpul
+            </li>
+            <li>
+                A - amplitudinea (cât de "tare" sună ~ volumul)
+            </li>
+            <li>
+                frecvența unghiulară:
+            </li>
+            $$ \omega = 2 \pi f $$
+            <li>unde f este frecvența obișnuită exprimată în hz (cicluri pe secundă)</li>
+            <li>Faza este doar o variabilă care translatează pe stânga și pe dreapta sunetul (întârziere sau avantaj)
+                față de t = 0.
+                În exemplele noastre, faza va fi mereu 0.
+            </li>
+            $$ \varphi = 0 $$
+        </ul>
+
+        <p>
+            De exemplu, o notă LA în acordajul standard, prin convenție, este la o frecvență de 440hz.
+        </p>
+        <p>
+            $$ f = 440hz$$
+        </p>
+        <p>Graficul sinusoidei asociat notei LA în acordajul standard arată cam așa:</p>
+        <img width="70%" src="images/simpleSin.png" alt="Simple Sin graph">
+        <br>
+        <button class="listen" onclick="playNote(440)"></button>
+        <p>O altă notă LA este la 220hz. Graficul ei arată asemnător:</p>
+        <img width="70%" src="images/simpleSin2.png" alt="Simple Sin graph">
+        <br>
+        <button class="listen" onclick="playNote(220)"></button>
+        <p>
+            După cum observați, există o relație evidentă între frecvență și felul în care auzim. O frecvență mai mare
+            (440) face sunetul mai înalt
+            (mai subțire), pe când una mai joasă scoate un sunet mai "gros".
+        </p>
+
+        <h4>Acordul</h4>
+        <p>Două sau mai multe sunete cântate simultan reprezintă un acord</p>
+        <p>Matematic vorbind, un acord este o însumare de mai multe sinusoide.</p>
+        <p>De exemplu, cele două note "LA" cântate împreună arată așa:</p>
+        <img width="70%" src="images/sum.png" alt="Simple sum graph">
+        <br>
+        <button class="listen" onclick="playNotes(220, 440)"></button>
+
+        <p>Graficul sumei nu spune prea multe lucruri. Dar auzim că cele două note sună bine împreună (și se
+            potrivesc)</p>
+        <p>Două note se potrivesc foarte bine dacă raportul frecvențelor lor este unul cât mai simplu. Acest lucru se
+            datorează
+            creierului nostru, căruia îi plac pattern-urile simple. Iată de exemplu două note frecvențe random cântate
+            împreună (223, 411):</p>
+
+        <img width="70%" src="images/rnd.png" alt="Random sum">
+        <br>
+        <button class="listen" onclick="playNotes(223, 411)"></button>
+
+        <p>Putem spune cu ușurință că raportul dintre cele două frecvențe este unul urâțel. De aici și combinația celor
+            două sunete</p>
+        <p>Pentru a înțelege acest fenomen, iată graficul în care cele două frecvențe random sunt descompuse:</p>
+
+        <img width="70%" src="images/diff.png" alt="Random sum">
+        <br>
+        <button class="listen" onclick="playNotes(223, 411)"></button>
+
+        <p>Liniile colorate reprezintă evenimentele sinusoidei de sus. După cum vedeți, nu există nicio concordanță
+            între evenimentele de sus și cele de jos</p>
+        <p>În schimb, iată cum arată 440 cu 220 la un loc (ele având un raport de 2:1)</p>
+
+        <img width="70%" src="images/goodSum.png" alt="Random sum">
+        <br>
+        <button class="listen" onclick="playNotes(220, 440)"></button>
+
+        <p>
+            Le-am așezat una peste alta tocmai ca să puteți observa concordanța care există între cele două.
+            Această periodicitate în muzică se numește "armonie" și ea poate fi obținută cântând mult mai multe note
+            împreună.
+        </p>
+
+        <p>Mai mult, nu doar raportul de 2:1 sună bine. Există și alte raporturi folosite în teoria muzicală care redau
+            un sunet plăcut. Iată câteva exemple:</p>
+
+        <div class="play-around">
+            <table class="tabel">
+                <tr>
+                    <td>
+                        2:1
+                    </td>
+                    <td>
+                        Octava
+                    </td>
+                    <td>
+                        <button class="listen" onclick="playNotes(220, 440)"></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        3:2
+                    </td>
+                    <td>
+                        Cvinta
+                    </td>
+                    <td>
+                        <button class="listen" onclick="playNotes(330, 220)"></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        4:3
+                    </td>
+                    <td>
+                        Cvarta
+                    </td>
+                    <td>
+                        <button class="listen" onclick="playNotes(440, 330)"></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        5:3
+                    </td>
+                    <td>
+                        Terța majoră
+                    </td>
+                    <td>
+                        <button class="listen" onclick="playNotes(550, 330)"></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        6:5
+                    </td>
+                    <td>
+                        Terța minoră
+                    </td>
+                    <td>
+                        <button class="listen" onclick="playNotes(528, 440)"></button>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th colspan="2">Încearcă chiar tu</th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="first">Prima notă</label>
+                    </td>
+                    <td>
+                        <input type="number" id="first" min="100" max="20000" value="440"/>hz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="second">A doua notă</label>
+                    </td>
+                    <td>
+                        <input type="number" id="second" min="100" max="20000" value="220"/>hz
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div style="text-align: center">
+                            <button class="listen" onclick="playNotesFromInputs()"></button>
+                        </div>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+
+
+    </div>
+
+</div>
+
+<hr>
+<div id="selectia">
+    <h3>Selecția naturală</h3>
+</div>
+
+
+</body>
+</html>
