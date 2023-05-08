@@ -85,7 +85,6 @@ def f1(individual):
         for j in range(i + 1, len(individual)):
             ratio = max(individual[i], individual[j]) / min(individual[i], individual[j])
             score += sc(ratio, abs(individual[i] - individual[j]))
-
     return score
 
 
